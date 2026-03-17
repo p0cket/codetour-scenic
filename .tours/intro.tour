@@ -8,12 +8,15 @@
     {
       "file": "src/player/index.ts",
       "description": "### 🎥 Tour Player\n\nThe CodeTour player is what defines the experience that end-users get, when actually taking a guided walkthrough. It includes various UX components:\n\n* 🕳️ [Gutter decorator](./src/player/decorator.ts) - Displays the \"CodeTour\" icon next to lines that are associated with a tour\n* 📊 [Status bar indicator](./src/player/status.ts) - Indicates the current tour and step\n* 🌳 [Tree view](./src/player/tree/index.ts) - Provides an at-a-glance view of the tours within the opened workspace",
-      "line": 436
+      "line": 448
     },
     {
       "file": "src/recorder/index.ts",
       "description": "### 📹 Tour Recorder\n\nThe CodeTour recorder is how a repo maintainer can create new walkthroughs of the codebase. The recorder is made up of a few components:\n\n* 💭 [Comment UX](./src/recorder/commands.ts) - Enables attaching new steps to lines of code, directories, etc.\n* 📋 [Completion provider](./src/recorder/completionProvider.ts) - Provides completion support for authoring command links",
       "line": 4
+    },
+    {
+      "description": "### 📊 Architecture Overview\n\nHere's a high-level overview of the CodeTour architecture:\n\n```mermaid\ngraph TD\n    A[Extension Entry] --> B[Player Module]\n    A --> C[Recorder Module]\n    A --> D[Store]\n    B --> E[Comment Thread UI]\n    B --> F[Gutter Decorators]\n    B --> G[Status Bar]\n    B --> H[Tree View]\n    B --> I[Diagram Panel]\n    C --> J[Recording Commands]\n    C --> K[Completion Provider]\n    D --> L[Tour Discovery]\n    D --> M[State Management]\n```\n\nThis diagram shows how the main extension modules connect together. The **Player** and **Recorder** are the two primary subsystems, both backed by the shared **Store** for state management."
     }
   ],
   "description": "Getting Started"

@@ -83,7 +83,7 @@
           },
           "description": {
             "type": "string",
-            "description": "Description of the step."
+            "description": "Description of the step. Supports markdown, including Mermaid diagram blocks (```mermaid) which will be rendered in a separate diagram panel."
           },
           "selection": {
             "type": "object",

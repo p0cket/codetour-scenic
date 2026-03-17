@@ -35,6 +35,12 @@ import {
 import { registerCodeStatusModule } from "./codeStatus";
 import { registerPlayerCommands } from "./commands";
 import { registerDecorators } from "./decorator";
+import {
+  extractDiagrams,
+  hideDiagramPanel,
+  replaceDiagramBlocks,
+  showDiagramPanel
+} from "./diagram";
 import { registerFileSystemProvider } from "./fileSystem";
 import { registerTextDocumentContentProvider } from "./fileSystem/documentProvider";
 import { registerStatusBar } from "./status";
@@ -173,6 +179,8 @@ export async function stopPlayer() {
     controller.dispose();
     controller = null;
   }
+
+  hideDiagramPanel();
 }
 
 const VIEW_COMMANDS = new Map([
@@ -283,6 +291,14 @@ async function renderCurrentStep() {
       ? CommentMode.Editing
       : CommentMode.Preview;
   let content = step.description;
+
+  const diagrams = extractDiagrams(content);
+  if (diagrams.length > 0) {
+    content = replaceDiagramBlocks(content);
+    showDiagramPanel(diagrams);
+  } else {
+    hideDiagramPanel();
+  }
 
   let hasPreviousStep = currentStep > 0;
   const hasNextStep = currentStep < currentTour.steps.length - 1;
