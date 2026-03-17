@@ -133,6 +133,34 @@ If you add a markdown code block to a step's body content, then the CodeTour pla
 
 > Note: The code snippet will be formatted after inserting it into the document, and therefore, you don't need to worry about adding whitespace/etc. to the snippet itself.
 
+#### Diagrams
+
+CodeTour supports rendering [Mermaid](https://mermaid.js.org/) diagrams within tour steps. To add a diagram, include a fenced code block with the `mermaid` language identifier in your step description. When a step containing a Mermaid block is displayed, the diagram will be automatically rendered in a dedicated **CodeTour Diagram** panel alongside the editor. This enables you to include flowcharts, sequence diagrams, mind maps, and other visualizations to better convey architecture and concepts.
+
+For example, you can add the following to a step's description:
+
+````markdown
+```mermaid
+graph TD
+    A[Start] --> B[Process]
+    B --> C{Decision}
+    C -->|Yes| D[Result A]
+    C -->|No| E[Result B]
+```
+````
+
+CodeTour supports all Mermaid diagram types, including:
+
+- **Flowcharts** (`graph TD`, `graph LR`)
+- **Sequence diagrams** (`sequenceDiagram`)
+- **Mind maps** (`mindmap`)
+- **Class diagrams** (`classDiagram`)
+- **State diagrams** (`stateDiagram-v2`)
+- **Gantt charts** (`gantt`)
+- **Pie charts** (`pie`)
+
+You can include multiple diagrams in a single step, and they will all be rendered in the diagram panel. The panel automatically opens and closes as you navigate between steps with and without diagrams.
+
 #### Shell Commands
 
 To make it simpler to embed shell commands into a step (e.g. to perform a build, run tests, start an app), CodeTour supports a special `>>` synax, followed by the shell command you want to run (e.g. `>> npm run compile`). This will be converted into a hyperlink, that when clicked, will launch a new integrated terminal (called `CodeTour`) and will run the specified command.
