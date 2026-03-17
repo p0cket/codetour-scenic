@@ -61,12 +61,27 @@ function escapeHtml(text: string): string {
     .replace(/"/g, "&quot;");
 }
 
+function generateNonce(): string {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let nonce = "";
+  for (let i = 0; i < 32; i++) {
+    nonce += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return nonce;
+}
+
 function getDiagramWebviewContent(diagrams: string[]): string {
+  const nonce = generateNonce();
+  const showHeading = diagrams.length > 1;
   const diagramDivs = diagrams
     .map(
       (diagram, index) =>
-        `<div class="diagram-container">
-        <h3>Diagram ${diagrams.length > 1 ? index + 1 : ""}</h3>
+        `<div class="diagram-container">${
+          showHeading
+            ? `\n        <h3>Diagram ${index + 1}</h3>`
+            : ""
+        }
         <pre class="mermaid">${escapeHtml(diagram)}</pre>
       </div>`
     )
@@ -79,10 +94,10 @@ function getDiagramWebviewContent(diagrams: string[]): string {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'none';
-                 script-src https://cdn.jsdelivr.net 'unsafe-inline';
-                 style-src 'unsafe-inline';">
+                 script-src https://cdn.jsdelivr.net 'nonce-${nonce}';
+                 style-src 'nonce-${nonce}';">
   <title>CodeTour Diagram</title>
-  <style>
+  <style nonce="${nonce}">
     body {
       padding: 16px;
       font-family: var(--vscode-font-family, sans-serif);
@@ -119,10 +134,18 @@ function getDiagramWebviewContent(diagrams: string[]): string {
 <body>
   ${diagramDivs}
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.3/dist/mermaid.min.js"></script>
-  <script>
+  <script nonce="${nonce}">
     (function() {
+      if (typeof mermaid === 'undefined') {
+        document.body.innerHTML =
+          '<div class="error-message">' +
+          'Could not load the Mermaid diagram library. ' +
+          'Please check your internet connection and reload the panel.' +
+          '</div>';
+        return;
+      }
       try {
-        const isDark = document.body.getAttribute('data-vscode-theme-kind') === 'vscode-dark'
+        var isDark = document.body.getAttribute('data-vscode-theme-kind') === 'vscode-dark'
           || document.body.classList.contains('vscode-dark');
         mermaid.initialize({
           startOnLoad: true,
